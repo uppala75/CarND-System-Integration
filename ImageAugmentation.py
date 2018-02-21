@@ -97,7 +97,7 @@ for line in lines_none:
     label = line[1]
     labels.append(label)
     
-# Converting images & steering angles to numpy arrays
+# Converting images & labels to numpy arrays
 images = np.array(images)
 labels = np.array(labels)
 labels = labels.astype(int)
@@ -163,8 +163,8 @@ def add_random_shadow(image):
     image = cv2.cvtColor(image_hls,cv2.COLOR_HLS2RGB)
     return image
 
-# n_add is total number of samples in each category after augmenting. Example: If class 0 had 20 samples, n_add=250 will give 250 samples
-# after the gen_new_images function (adds only 230 samples in this example)
+# n_add is total number of samples in each category after augmenting. Example: If class 0 had 20 samples, n_add=250 
+# will give 250 samples when this function is called (adds 250-20=230 samples in this example)
 def gen_new_images(X_train,y_train,n_add,ang_range,shear_range,trans_range):
    
     ## checking that the inputs are the correct lengths
