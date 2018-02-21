@@ -20,83 +20,13 @@ with open('TrafficLightLabels.csv', mode='r') as f:
     next(fread, f)
     TL_labels = [rows[1] for rows in fread]
 
+lines_red = []
+lines_yellow = []
+lines_green = []
+lines_none = []
 images = []
 labels = []
 
-imgsr = []
-lblsr = []
-imgsy = []
-lblsy = []
-imgsg = []
-lblsg = []
-imgsn = []
-lblsn = []
-
-
-def readImagesLabels(pathcsv, fileDir):
-
-    lines_file = []
-
-    with open(pathcsv) as csvfile:
-        reader = csv.reader(csvfile)
-        for line in reader:
-            lines_file.append(line)
-
-    imgs = []
-    lbls = []
-    # Load each row into line
-    for line in lines_file:
-    # Load the images and labels
-        filename = line[0]
-        #print ("filename:", filename)
-        local_path = fileDir + filename
-        #print ("filename with full path:", local_path)
-        image = cv2.imread(local_path)
-        #print ("shape of image:", image.shape)
-        imgs.append(image)
-        label = line[1]
-        #print ("label:", label)
-        lbls.append(label)
-		
-    return imgs, lbls
-	
-redCsvPath = './data/sim-slack/Red/redimgs.csv'
-redFileDir = './data/sim-slack/Red/'
-
-yellowCsvPath = './data/sim-slack/Yellow/yellowimgs.csv'
-yellowFileDir = './data/sim-slack/Yellow/'
-
-greenCsvPath = './data/sim-slack/Green/greenimgs.csv'
-greenFileDir = './data/sim-slack/Green/'
-
-noneCsvPath = './data/sim-slack/None/noneimgs.csv'
-noneFileDir = './data/sim-slack/None/'
-
-imgsr, lblsr = readImagesLabels(redCsvPath, redFileDir)
-#print ("Shape of image:", imgsr[0].shape)
-#print ("filename with full path:", local_path)
-#print ("Total # of red images:", len(imgsr))
-#print ("Total # of red labels:", len(lblsr))
-
-imgsg, lblsg = readImagesLabels(greenCsvPath, greenFileDir)
-#print ("Total # of green images:", len(imgsg))
-#print ("Total # of green labels:", len(lblsg))
-
-imgsy, lblsy = readImagesLabels(yellowCsvPath, yellowFileDir)
-#print ("Total # of yellow images:", len(imgsy))
-#print ("Total # of yellow labels:", len(lblsy))
-
-imgsn, lblsn = readImagesLabels(noneCsvPath, noneFileDir)
-#print ("Total # of none images:", len(imgsn))
-#print ("Total # of none labels:", len(lblsn))
-
-images = imgsr+imgsy+imgsg+imgsn
-labels = lblsr+lblsy+lblsg+lblsn
-
-#print ("Total # of images:", len(images))
-#print ("Total # of labels:", len(labels))
-
-'''	
 # Load data of image names and labels from red, green, yellow, and none csv files
 with open('./data/sim-slack/Red/redimgs.csv') as csvfile:
     reader = csv.reader(csvfile)
@@ -166,7 +96,6 @@ for line in lines_none:
     images.append(image)
     label = line[1]
     labels.append(label)
-'''
     
 # Converting images & labels to numpy arrays
 images = np.array(images)
@@ -234,8 +163,8 @@ def add_random_shadow(image):
     image = cv2.cvtColor(image_hls,cv2.COLOR_HLS2RGB)
     return image
 
-# n_add is total number of samples in each category after augmenting. Example: If class 0 had 20 samples, n_add=250  
-# will give 250 samples when the gen_new_images function is called (adds 250-20 = 230 samples in this example)
+# n_add is total number of samples in each category after augmenting. Example: If class 0 had 20 samples, n_add=250 
+# will give 250 samples when this function is called (adds 250-20=230 samples in this example)
 def gen_new_images(X_train,y_train,n_add,ang_range,shear_range,trans_range):
    
     ## checking that the inputs are the correct lengths
@@ -281,8 +210,8 @@ augment_num = 50
 
 y_train = labels
 	
-# Use the next three lines in the code if normalization is needed. Error with mean function.
-# Normalize all original training images
+# Use the next three lines in the code if normalization is needed
+# Normalize all original training images (images still in color)
 #X_train_norm = (X_train - np.mean(X_train)) / (np.max(X_train) - np.min(X_train))
 #X_test_norm = (X_test - X_test.mean()) / (np.max(X_test) - np.min(X_test))
 #X_valid_norm = (X_valid - X_valid.mean()) / (np.max(X_valid) - np.min(X_valid))
